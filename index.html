@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือ & Dashboard การขยายพันธุ์โหระพา</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for crisp icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        basil: {
+                            light: '#e8f5e9',
+                            DEFAULT: '#2e7d32',
+                            dark: '#1b5e20',
+                            accent: '#81c784',
+                            lime: '#aed581'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', 'Inter', sans-serif;
+            background-color: #f8faf9;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+        }
+        .tab-btn.active {
+            background-color: #059669;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+        }
+        .step-check:checked + label {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col pb-12">
+
+    <!-- TOP NAV / HEADER -->
+    <header class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-basil-dark text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-500/30 flex items-center justify-center border border-emerald-400/30 text-emerald-300 text-2xl shadow-inner">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">คู่มือขยายพันธุ์โหระพา</h1>
+                    <p class="text-xs sm:text-sm text-emerald-200/90 font-light">Interactive Sweet Basil Propagation Dashboard</p>
+                </div>
+            </div>
+            
+            <!-- Quick Filter / Interactive Action -->
+            <div class="flex items-center gap-2 bg-emerald-950/40 p-1.5 rounded-xl border border-emerald-700/50 text-xs sm:text-sm">
+                <span class="text-emerald-200 px-2 font-medium hidden sm:inline"><i class="fa-solid fa-filter mr-1"></i> กรองตามเป้าหมาย:</span>
+                <button onclick="filterMethods('all')" id="btn-filter-all" class="filter-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg transition font-medium shadow-sm">ทั้งหมด</button>
+                <button onclick="filterMethods('beginner')" id="btn-filter-beginner" class="filter-btn text-emerald-100 hover:bg-emerald-700/50 px-3 py-1.5 rounded-lg transition">มือใหม่/ก้านครัว</button>
+                <button onclick="filterMethods('fast')" id="btn-filter-fast" class="filter-btn text-emerald-100 hover:bg-emerald-700/50 px-3 py-1.5 rounded-lg transition">ได้ผลไว</button>
+                <button onclick="filterMethods('farm')" id="btn-filter-farm" class="filter-btn text-emerald-100 hover:bg-emerald-700/50 px-3 py-1.5 rounded-lg transition">แปลงใหญ่</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 flex-grow space-y-8 w-full">
+
+        <!-- STATS OVERVIEW CARDS -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass-card p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center space-x-4 hover:shadow-md transition">
+                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">รูปแบบการขยายพันธุ์</p>
+                    <p class="text-xl font-bold text-slate-800">3 วิธีหลัก</p>
+                    <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">เมล็ด / ดิน / น้ำ</span>
+                </div>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center space-x-4 hover:shadow-md transition">
+                <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">อัตราความสำเร็จ</p>
+                    <p class="text-xl font-bold text-slate-800">85 - 95%</p>
+                    <span class="text-[10px] text-teal-600 font-semibold bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">ขึ้นกับความสด/ความชื้น</span>
+                </div>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center space-x-4 hover:shadow-md transition">
+                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">ระยะเวลางอกราก</p>
+                    <p class="text-xl font-bold text-slate-800">5 - 14 วัน</p>
+                    <span class="text-[10px] text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">การปักชำรากออกไวสุด</span>
+                </div>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center space-x-4 hover:shadow-md transition">
+                <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-sun"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">แสงแดดที่ต้องการ</p>
+                    <p class="text-xl font-bold text-slate-800">รำไร ➔ แดดจัด</p>
+                    <span class="text-[10px] text-sky-600 font-semibold bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200">เริ่มจากร่มรำไรในระยะแรก</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- METHOD CARDS CONTAINER (3 CORE METHODS) -->
+        <section>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-emerald-600"></i> เจาะลึก 3 วิธีขยายพันธุ์
+                    </h2>
+                    <p class="text-sm text-slate-500">เลือกวิธีที่เหมาะสมกับอุปกรณ์และพื้นที่ของคุณ</p>
+                </div>
+                <!-- View Switcher -->
+                <div class="flex bg-slate-200/80 p-1 rounded-xl text-xs font-medium self-end sm:self-auto">
+                    <button onclick="switchView('grid')" id="btn-view-grid" class="px-3 py-1.5 rounded-lg bg-white text-emerald-700 shadow-sm transition">
+                        <i class="fa-solid fa-grip mr-1"></i> การ์ดแบบละเอียด
+                    </button>
+                    <button onclick="switchView('tabs')" id="btn-view-tabs" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
+                        <i class="fa-solid fa-folder-open mr-1"></i> แท็บเจาะลึก
+                    </button>
+                </div>
+            </div>
+
+            <!-- GRID VIEW CONTAINER -->
+            <div id="view-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- METHOD 1: SEED -->
+                <div class="method-card farm glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-emerald-100 flex flex-col justify-between" data-category="farm">
+                    <div>
+                        <!-- Card Header -->
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-1">
+                                <i class="fa-solid fa-wheat-awn"></i> วิธีที่ 1
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono"><i class="fa-regular fa-clock mr-1"></i> 20-25 วันย้ายปลูก</span>
+                        </div>
+                        
+                        <!-- Visual Illustration Banner -->
+                        <div class="h-36 bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl flex items-center justify-center p-4 mb-4 relative overflow-hidden group">
+                            <!-- Custom SVG Illustration: Seed & Sprout -->
+                            <svg class="w-28 h-28 transform group-hover:scale-110 transition duration-300 drop-shadow-md" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="60" cy="100" rx="45" ry="10" fill="#a7f3d0"/>
+                                <path d="M60 95V55" stroke="#047857" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M60 70C45 65 35 50 35 35C50 35 60 50 60 70Z" fill="#10b981"/>
+                                <path d="M60 55C75 50 85 35 85 20C70 20 60 35 60 55Z" fill="#059669"/>
+                                <circle cx="45" cy="98" r="4" fill="#78350f"/>
+                                <circle cx="65" cy="101" r="3" fill="#78350f"/>
+                                <circle cx="75" cy="97" r="3.5" fill="#78350f"/>
+                            </svg>
+                            <div class="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-emerald-800 font-medium border border-emerald-100">
+                                รากแก้วแข็งแรงที่สุด
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">การเพาะเมล็ด (Seed Propagation)</h3>
+                        <p class="text-xs text-slate-600 mb-4 line-clamp-2">เหมาะสำหรับการปลูกปริมาณมาก แปลงขนาดใหญ่ ระบบรากแก้วแข็งแรง ต้นยืนยาวทนทาน</p>
+
+                        <!-- Pros & Cons -->
+                        <div class="bg-slate-50 p-3 rounded-xl mb-4 text-xs space-y-1.5 border border-slate-100">
+                            <div class="flex items-start gap-1.5 text-emerald-700">
+                                <i class="fa-solid fa-circle-check mt-0.5 shrink-0"></i>
+                                <span><strong>จุดเด่น:</strong> รากแก้วแข็งแรง ทนทานต่อสภาพอากาศ อายุยืน</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-amber-700">
+                                <i class="fa-solid fa-circle-exclamation mt-0.5 shrink-0"></i>
+                                <span><strong>ข้อสังเกต:</strong> ใช้เวลานานกว่าวิธียอดปักชำ</span>
+                            </div>
+                        </div>
+
+                        <!-- Equipment Checklist -->
+                        <div class="mb-4">
+                            <p class="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1">
+                                <i class="fa-solid fa-toolbox text-emerald-600"></i> อุปกรณ์ที่ต้องเตรียม:
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">เมล็ดพันธุ์โหระพา</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">ดินร่วน/วัสดุเพาะ</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">ถาดเพาะกล้า</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">ฟาง/แกลบดิบ</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">บัวรดน้ำฝอย</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Step Checklist Toggle -->
+                    <button onclick="openStepsModal('seed')" class="w-full mt-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium text-xs py-2.5 px-4 rounded-xl transition border border-emerald-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list-check"></i> ดูขั้นตอนการทำละเอียด (5 ขั้นตอน)
+                    </button>
+                </div>
+
+                <!-- METHOD 2: SOIL CUTTING -->
+                <div class="method-card fast farm glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-emerald-100 flex flex-col justify-between" data-category="fast">
+                    <div>
+                        <!-- Card Header -->
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-teal-100 text-teal-800 text-xs font-semibold px-3 py-1 rounded-full border border-teal-200 flex items-center gap-1">
+                                <i class="fa-solid fa-scissors"></i> วิธีที่ 2 (ยอดนิยม)
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono"><i class="fa-regular fa-clock mr-1"></i> 7-14 วันแตกราก</span>
+                        </div>
+                        
+                        <!-- Visual Illustration Banner -->
+                        <div class="h-36 bg-gradient-to-br from-teal-50 to-emerald-100 rounded-2xl flex items-center justify-center p-4 mb-4 relative overflow-hidden group">
+                            <!-- Custom SVG Illustration: Stem Cutting Soil -->
+                            <svg class="w-28 h-28 transform group-hover:scale-110 transition duration-300 drop-shadow-md" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 95C20 85 100 85 100 95V110H20V95Z" fill="#78350f"/>
+                                <path d="M60 90V30" stroke="#15803d" stroke-width="5" stroke-linecap="round"/>
+                                <!-- Nodes & Leaves -->
+                                <path d="M60 45C45 40 38 25 38 15C52 15 60 30 60 45Z" fill="#22c55e"/>
+                                <path d="M60 45C75 40 82 25 82 15C68 15 60 30 60 45Z" fill="#16a34a"/>
+                                <path d="M60 65C48 60 42 48 42 40C54 40 60 52 60 65Z" fill="#22c55e"/>
+                                <path d="M60 65C72 60 78 48 78 40C66 40 60 52 60 65Z" fill="#16a34a"/>
+                                <!-- Root lines -->
+                                <path d="M55 90L45 102M60 92L60 106M65 90L75 103" stroke="#fef08a" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                            <div class="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-teal-800 font-medium border border-teal-100">
+                                เติบโตเร็ว & สายพันธุ์เป๊ะ 100%
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">การปักชำกิ่งลงดิน (Soil Cutting)</h3>
+                        <p class="text-xs text-slate-600 mb-4 line-clamp-2">ได้ผลผลิตเร็วที่สุด ยอดตรงตามต้นแม่ 100% กิ่งกึ่งแก่กึ่งอ่อนปักลงดินรากเดินดี</p>
+
+                        <!-- Pros & Cons -->
+                        <div class="bg-slate-50 p-3 rounded-xl mb-4 text-xs space-y-1.5 border border-slate-100">
+                            <div class="flex items-start gap-1.5 text-emerald-700">
+                                <i class="fa-solid fa-circle-check mt-0.5 shrink-0"></i>
+                                <span><strong>จุดเด่น:</strong> โตไวมาก ทำง่าย ไม่ต้องรอเมล็ด ได้ทรงพุ่มเร็ว</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-amber-700">
+                                <i class="fa-solid fa-circle-exclamation mt-0.5 shrink-0"></i>
+                                <span><strong>ข้อสังเกต:</strong> ต้องคุมความชื้นไม่ให้กิ่งเหี่ยวในสัปดาห์แรก</span>
+                            </div>
+                        </div>
+
+                        <!-- Equipment Checklist -->
+                        <div class="mb-4">
+                            <p class="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1">
+                                <i class="fa-solid fa-toolbox text-teal-600"></i> อุปกรณ์ที่ต้องเตรียม:
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">กิ่งพันธุ์ (5-6 นิ้ว)</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">กรรไกรคมๆ</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">ดินร่วนปนทราย</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">กระถางปลูก</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">ฮอร์โมนเร่งราก (ออปชัน)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Step Checklist Toggle -->
+                    <button onclick="openStepsModal('soil')" class="w-full mt-2 bg-teal-50 hover:bg-teal-100 text-teal-700 font-medium text-xs py-2.5 px-4 rounded-xl transition border border-teal-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list-check"></i> ดูขั้นตอนการทำละเอียด (5 ขั้นตอน)
+                    </button>
+                </div>
+
+                <!-- METHOD 3: WATER PROPAGATION -->
+                <div class="method-card beginner glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-emerald-100 flex flex-col justify-between" data-category="beginner">
+                    <div>
+                        <!-- Card Header -->
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-3 py-1 rounded-full border border-sky-200 flex items-center gap-1">
+                                <i class="fa-solid fa-glass-water"></i> วิธีที่ 3 (ทำง่ายในครัว)
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono"><i class="fa-regular fa-clock mr-1"></i> 5-10 วันเห็นราก</span>
+                        </div>
+                        
+                        <!-- Visual Illustration Banner -->
+                        <div class="h-36 bg-gradient-to-br from-sky-50 to-blue-100 rounded-2xl flex items-center justify-center p-4 mb-4 relative overflow-hidden group">
+                            <!-- Custom SVG Illustration: Water Glass Cutting -->
+                            <svg class="w-28 h-28 transform group-hover:scale-110 transition duration-300 drop-shadow-md" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Glass Jar -->
+                                <path d="M40 50L45 105C45 107.761 47.2386 110 50 110H70C72.7614 110 75 107.761 75 105L80 50H40Z" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2" fill-opacity="0.8"/>
+                                <!-- Water line -->
+                                <path d="M42.5 75C42.5 75 52.5 73 60 75C67.5 77 77.5 75 77.5 75L79.5 105C79.5 107.761 77.2614 110 74.5 110H45.5C42.7386 110 40.5 107.761 40.5 105L42.5 75Z" fill="#7dd3fc" fill-opacity="0.6"/>
+                                <!-- Stem -->
+                                <path d="M60 25V90" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
+                                <!-- Top Leaves -->
+                                <path d="M60 35C48 30 42 18 42 10C54 10 60 22 60 35Z" fill="#22c55e"/>
+                                <path d="M60 35C72 30 78 18 78 10C66 10 60 22 60 35Z" fill="#16a34a"/>
+                                <!-- Roots in water -->
+                                <path d="M60 80L50 95M60 85L62 100M60 78L70 92" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <div class="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-sky-800 font-medium border border-sky-100">
+                                มือใหม่ทำได้ทันที / มองเห็นราก
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">การปักชำกิ่งในน้ำ (Water Propagation)</h3>
+                        <p class="text-xs text-slate-600 mb-4 line-clamp-2">นำก้านเหลือจากการทำอาหารมาปักแช่น้ำ สะอาด ไม่เลอะเทอะ สังเกตการโตของรากได้ชัดเจน</p>
+
+                        <!-- Pros & Cons -->
+                        <div class="bg-slate-50 p-3 rounded-xl mb-4 text-xs space-y-1.5 border border-slate-100">
+                            <div class="flex items-start gap-1.5 text-emerald-700">
+                                <i class="fa-solid fa-circle-check mt-0.5 shrink-0"></i>
+                                <span><strong>จุดเด่น:</strong> สะอาด ปลูกในห้อง/คอนโดได้ ตรวจสอบรากง่าย</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-amber-700">
+                                <i class="fa-solid fa-circle-exclamation mt-0.5 shrink-0"></i>
+                                <span><strong>ข้อสังเกต:</strong> ต้องหมั่นเปลี่ยนน้ำทุก 2-3 วันเพื่อป้องกันน้ำเน่า</span>
+                            </div>
+                        </div>
+
+                        <!-- Equipment Checklist -->
+                        <div class="mb-4">
+                            <p class="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1">
+                                <i class="fa-solid fa-toolbox text-sky-600"></i> อุปกรณ์ที่ต้องเตรียม:
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">ก้านโหระพาครัว</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">แก้วใส/ขวดพลาสติก</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">น้ำสะอาด</span>
+                                <span class="bg-white text-slate-600 text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">กรรไกรตัดแต่ง</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Step Checklist Toggle -->
+                    <button onclick="openStepsModal('water')" class="w-full mt-2 bg-sky-50 hover:bg-sky-100 text-sky-700 font-medium text-xs py-2.5 px-4 rounded-xl transition border border-sky-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list-check"></i> ดูขั้นตอนการทำละเอียด (5 ขั้นตอน)
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- TABBED VIEW CONTAINER (HIDDEN BY DEFAULT) -->
+            <div id="view-tabs" class="hidden glass-card rounded-3xl p-6 shadow-sm border border-emerald-100">
+                <!-- Nav Buttons -->
+                <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-4 mb-6">
+                    <button onclick="activateTab('tab-seed')" id="tab-btn-seed" class="tab-btn active px-4 py-2.5 rounded-xl font-medium text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-wheat-awn"></i> 1. การเพาะเมล็ด
+                    </button>
+                    <button onclick="activateTab('tab-soil')" id="tab-btn-soil" class="tab-btn px-4 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+                        <i class="fa-solid fa-scissors"></i> 2. การปักชำกิ่งลงดิน
+                    </button>
+                    <button onclick="activateTab('tab-water')" id="tab-btn-water" class="tab-btn px-4 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+                        <i class="fa-solid fa-glass-water"></i> 3. การปักชำกิ่งในน้ำ
+                    </button>
+                </div>
+
+                <!-- TAB CONTENT 1: SEED -->
+                <div id="tab-seed" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-slate-800 text-lg">การเพาะเมล็ดอย่างละเอียด</h4>
+                            <p class="text-sm text-slate-600">เหมาะสำหรับการทำแปลงเกษตรขนาดใหญ่ที่ต้องการให้โหระพามีอายุยาวนาน ทนทานต่อโรคและแมลงจากระบบรากแก้วที่สมบูรณ์</p>
+                            <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-800 space-y-2">
+                                <p class="font-bold"><i class="fa-solid fa-lightbulb"></i> เคล็ดลับเพิ่มอัตราการงอก:</p>
+                                <p>การแช่น้ำอุ่น 50°C จะช่วยกระตุ้นเยื่อหุ้มเมล็ดให้อ่อนตัว เมล็ดจะพองตัวเร็วขึ้นถึง 2 เท่า!</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 space-y-3">
+                            <h5 class="font-semibold text-sm text-slate-700">ลำดับขั้นตอนการปฏิบัติงาน:</h5>
+                            <div class="space-y-2">
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center shrink-0">1</span>
+                                    <div><strong>การเตรียมเมล็ด:</strong> แช่เมล็ดพันธุ์ในน้ำอุ่น (50°C) หรือน้ำปกติประมาณ 30 นาที เพื่อทำความสะอาดและกระตุ้นการงอก</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center shrink-0">2</span>
+                                    <div><strong>การเตรียมดิน:</strong> ผสมดินร่วน 2 ส่วน : ทรายหยาบ 1 ส่วน : ขุยมะพร้าว 1 ส่วน : ปุ๋ยคอก 1 ส่วน ลงถาดเพาะ เว้นขอบ 1 นิ้ว</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center shrink-0">3</span>
+                                    <div><strong>การหยอดเมล็ด:</strong> โรยเมล็ดบางๆ โรยดินกลบทับลึก 2 เท่าของเมล็ด โรยฟาง/แกลบดิบบางๆ ป้องกันน้ำกระเด็น</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center shrink-0">4</span>
+                                    <div><strong>การรดน้ำดูแล:</strong> รดน้ำฝอยชุ่มวันละ 2 ครั้ง (เช้า-เย็น) วางร่มรำไร เมล็ดเริ่มงอกภายใน 5–7 วัน</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center shrink-0">5</span>
+                                    <div><strong>การย้ายปลูก:</strong> เมื่ออายุ 20–25 วัน (มีใบจริง 3-4 ใบ) ย้ายลงแปลง/กระถางจริง เว้นระยะ 30 ซม.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT 2: SOIL -->
+                <div id="tab-soil" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-slate-800 text-lg">การปักชำกิ่งลงดินอย่างละเอียด</h4>
+                            <p class="text-sm text-slate-600">วิธียอดนิยมที่สุดสำหรับการขยายพันธุ์เพิ่มจำนวนอย่างรวดเร็ว ได้ผลผลิตเร็วและมีพันธุกรรมเหมือนต้นแม่ทุกประการ</p>
+                            <div class="p-4 bg-teal-50 rounded-2xl border border-teal-200 text-xs text-teal-800 space-y-2">
+                                <p class="font-bold"><i class="fa-solid fa-lightbulb"></i> จุดสำคัญที่สุด:</p>
+                                <p>ต้องให้ **ข้อใบคู่ล่างสุด** จมลงไปใต้ดิน เพราะรากโหระพาจะงอกออกมาจากบริเวณข้อปุ่มนี้มากที่สุด</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 space-y-3">
+                            <h5 class="font-semibold text-sm text-slate-700">ลำดับขั้นตอนการปฏิบัติงาน:</h5>
+                            <div class="space-y-2">
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 font-bold flex items-center justify-center shrink-0">1</span>
+                                    <div><strong>เลือกและตัดกิ่ง:</strong> เลือกกิ่งกึ่งแก่กึ่งอ่อนจากต้นแม่สมบูรณ์ ไม่มีช่อดอก ตัดเฉียงที่โคนกิ่งยาว 5-6 นิ้ว</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 font-bold flex items-center justify-center shrink-0">2</span>
+                                    <div><strong>การริดใบ:</strong> เด็ดใบส่วนล่างออกเกือบหมด เหลือใบยอดไว้เพียง 2-3 ใบ เพื่อลดการคายน้ำ</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 font-bold flex items-center justify-center shrink-0">3</span>
+                                    <div><strong>จุ่มฮอร์โมน (ออปชัน):</strong> จุ่มโคนกิ่งในฮอร์โมนเร่งราก หรือใช้น้ำมะนาว/ผงชูรสเจือจางเพื่อกระตุ้นราก</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 font-bold flex items-center justify-center shrink-0">4</span>
+                                    <div><strong>การปักชำ:</strong> ปักกิ่งลงดินให้ข้อใบคู่ล่างจมดิน 1-2 นิ้ว กดดินรอบโคนให้แน่นพอประมาณ</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 font-bold flex items-center justify-center shrink-0">5</span>
+                                    <div><strong>ดูแลรักษา:</strong> รดน้ำชุ่ม วางในที่ร่มรำไร 1 สัปดาห์ ผ่านไป 7-14 วัน รากจะงอกและผลิยอดใหม่</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT 3: WATER -->
+                <div id="tab-water" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-slate-800 text-lg">การปักชำกิ่งในน้ำอย่างละเอียด</h4>
+                            <p class="text-sm text-slate-600">ทางเลือกที่ดีที่สุดสำหรับคนเมืองหรือคนที่มีพื้นที่จำกัด เปลี่ยนเศษก้านโหระพาจากห้องครัวให้กลายเป็นต้นใหม่ได้ฟรี!</p>
+                            <div class="p-4 bg-sky-50 rounded-2xl border border-sky-200 text-xs text-sky-800 space-y-2">
+                                <p class="font-bold"><i class="fa-solid fa-lightbulb"></i> ข้อควรระวังในการชำน้ำ:</p>
+                                <p>อย่าให้ใบแช่อยู่ในน้ำเพราะจะทำให้เน่าเสียได้ง่าย และต้องเปลี่ยนน้ำใหม่ทุก 2-3 วันเสมอ</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 space-y-3">
+                            <h5 class="font-semibold text-sm text-slate-700">ลำดับขั้นตอนการปฏิบัติงาน:</h5>
+                            <div class="space-y-2">
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 font-bold flex items-center justify-center shrink-0">1</span>
+                                    <div><strong>เตรียมกิ่ง:</strong> คัดก้านโหระพาเหลือใช้ความยาว 5-6 นิ้ว ตัดเฉียงปลายก้านเล็กน้อยเพื่อเพิ่มพื้นที่ดูดน้ำ</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 font-bold flex items-center justify-center shrink-0">2</span>
+                                    <div><strong>การริดใบ:</strong> เด็ดใบด้านล่างออกทั้งหมด เหลือเฉพาะใบยอด 2-4 ใบ เพื่อป้องกันใบเน่าแช่น้ำ</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 font-bold flex items-center justify-center shrink-0">3</span>
+                                    <div><strong>การแช่น้ำ:</strong> ปักกิ่งลงในแก้วใสหรือขวดพลาสติก ใส่น้ำสะอาดให้ท่วมข้อใบล่าง 1-2 นิ้ว</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 font-bold flex items-center justify-center shrink-0">4</span>
+                                    <div><strong>เปลี่ยนน้ำสม่ำเสมอ:</strong> วางริมหน้าต่างแสงแดดรำไร เปลี่ยนน้ำใหม่ทุกๆ 2-3 วันเพื่อป้องกันแบคทีเรีย</div>
+                                </div>
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 font-bold flex items-center justify-center shrink-0">5</span>
+                                    <div><strong>ย้ายลงดิน:</strong> ผ่านไป 5-10 วัน รากขาวจะยาว 2-5 ซม. ย้ายลงปลูกในกระถางดินตามปกติ</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- COMPARISON MATRIX & PRO CARE SECTION -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- COMPARISON TABLE (2 COLS) -->
+            <div class="lg:col-span-2 glass-card rounded-3xl p-6 shadow-sm border border-emerald-100 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-table-cells text-emerald-600"></i> ตารางเปรียบเทียบทั้ง 3 วิธี
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-4">สรุปจุดเด่น ความยากง่าย และข้อจำกัด เพื่อการตัดสินใจที่รวดเร็ว</p>
+
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-xs text-left text-slate-600">
+                            <thead class="text-[11px] text-slate-700 uppercase bg-slate-100/80 rounded-xl">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-l-xl">หัวข้อเปรียบเทียบ</th>
+                                    <th class="px-3 py-3 text-emerald-800">1. เพาะเมล็ด</th>
+                                    <th class="px-3 py-3 text-teal-800">2. ปักชำดิน</th>
+                                    <th class="px-3 py-3 rounded-r-xl text-sky-800">3. ปักชำน้ำ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-4 py-3 font-semibold text-slate-800">เหมาะสำหรับ</td>
+                                    <td class="px-3 py-3">แปลงใหญ่ / ฟาร์ม</td>
+                                    <td class="px-3 py-3 font-medium text-emerald-700">สวนหลังบ้าน / ทั่วไป</td>
+                                    <td class="px-3 py-3">มือใหม่ / คอนโด / เศษครัว</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-semibold text-slate-800">ระยะเวลางอกราก</td>
+                                    <td class="px-3 py-3">5 - 7 วัน (ต้นกล้า)</td>
+                                    <td class="px-3 py-3">7 - 14 วัน</td>
+                                    <td class="px-3 py-3 font-medium text-sky-600">5 - 10 วัน (เร็วสุด)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-semibold text-slate-800">ความแข็งแรงราก</td>
+                                    <td class="px-3 py-3 font-medium text-emerald-700">สูงมาก (มีรากแก้ว)</td>
+                                    <td class="px-3 py-3">ปานกลาง-สูง (รากฝอย)</td>
+                                    <td class="px-3 py-3">ปานกลาง (ต้องปรับตัวลงดิน)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-semibold text-slate-800">งบประมาณ / อุปกรณ์</td>
+                                    <td class="px-3 py-3">ซื้อเมล็ด + ถาดเพาะ</td>
+                                    <td class="px-3 py-3">ดิน + กระถาง + กิ่ง</td>
+                                    <td class="px-3 py-3 font-medium text-emerald-700">ประหยัดสุด (ใช้น้ำ+แก้ว)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-semibold text-slate-800">โอกาสรอดเติบโต</td>
+                                    <td class="px-3 py-3">90%</td>
+                                    <td class="px-3 py-3">85% - 90%</td>
+                                    <td class="px-3 py-3">80% - 85%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Interactive helper -->
+                <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle-info text-emerald-600"></i> แนะนำ: หากต้องการทานใบไว ให้เลือก "การปักชำลงดิน"</span>
+                </div>
+            </div>
+
+            <!-- PRO TIPS CARD (1 COL) -->
+            <div class="glass-card rounded-3xl p-6 shadow-sm border border-emerald-100 bg-gradient-to-b from-white via-emerald-50/30 to-emerald-100/40 flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg mb-3 shadow-md">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1">เคล็ดลับการดูแลให้พุ่มงาม</h3>
+                    <p class="text-xs text-slate-500 mb-4">เทคนิคสำคัญหลังขยายพันธุ์เพื่อให้โหระพาเก็บกินได้ยาวนาน</p>
+
+                    <div class="space-y-4 text-xs">
+                        <!-- Tip 1 -->
+                        <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-emerald-100 flex gap-3 items-start">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-bold text-sm">
+                                <i class="fa-solid fa-scissors"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-0.5">1. การหมั่น "เด็ดยอด"</h4>
+                                <p class="text-slate-600 leading-relaxed">เมื่อต้นเริ่มสูง ให้เด็ดยอดอ่อนออก เพื่อกระตุ้นให้เกิดตาข้าง แตกเป็นทรงพุ่มหนาแน่น ใบดกขึ้น 2-3 เท่า</p>
+                            </div>
+                        </div>
+
+                        <!-- Tip 2 -->
+                        <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-emerald-100 flex gap-3 items-start">
+                            <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center shrink-0 font-bold text-sm">
+                                <i class="fa-solid fa-ban"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-0.5">2. การตัด "ช่อดอก" ทิ้ง</h4>
+                                <p class="text-slate-600 leading-relaxed">เมื่อเห็นช่อดอกสีม่วง/ขาว ให้รีบตัดทิ้งทันที! เพื่อไม่ให้ต้นส่งสารอาหารไปเลี้ยงเมล็ด ซึ่งจะทำให้ต้นโทรม ใบแข็ง และกลิ่นหอมลดลง</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-emerald-800 text-white rounded-2xl text-xs flex items-center justify-between shadow-md">
+                    <span class="font-medium">อยากให้กลิ่นหอมเข้มข้น?</span>
+                    <span class="bg-emerald-600 text-emerald-100 px-2.5 py-1 rounded-lg text-[10px]">ให้เจอแดดจัด 6 ชม./วัน</span>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-12 text-center text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 py-4 border-t border-slate-200/60 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© Sweet Basil Propagation Guide & Dashboard • สรุปข้อมูลการเกษตรเพื่อบ้านและแปลงปลูก</p>
+            <div class="flex gap-4">
+                <span class="hover:text-slate-600 transition cursor-pointer"><i class="fa-solid fa-leaf text-emerald-600"></i> Organic Gardening Guide</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL FOR DETAILED STEP-BY-STEP CHECKLIST -->
+    <div id="steps-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 transform transition-all scale-95 opacity-0" id="modal-content">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
+                <div class="flex items-center gap-2">
+                    <span id="modal-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">วิธีปฏิบัติ</span>
+                    <h3 id="modal-title" class="font-bold text-slate-800 text-base sm:text-lg">ขั้นตอนการขยายพันธุ์</h3>
+                </div>
+                <button onclick="closeStepsModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Checklist Body -->
+            <div class="space-y-3 my-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1" id="modal-steps-container">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+                <span class="text-xs text-slate-400" id="modal-progress-text">ความคืบหน้า 0/5</span>
+                <button onclick="closeStepsModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs px-5 py-2.5 rounded-xl transition shadow-md">
+                    เข้าใจแล้ว & ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT FOR DASHBOARD INTERACTION -->
+    <script>
+        // DATA STORE FOR DETAILED STEPS & CHECKLISTS
+        const stepsData = {
+            seed: {
+                title: "การเพาะเมล็ด (Seed Propagation)",
+                badge: "วิธีที่ 1 • แปลงใหญ่",
+                badgeClass: "bg-emerald-100 text-emerald-800",
+                steps: [
+                    { step: 1, title: "การเตรียมเมล็ด", desc: "นำเมล็ดแช่น้ำอุ่น (50°C) หรือน้ำอุณหภูมิห้อง 30 นาที เพื่อทำความสะอาดและกระตุ้นการงอก" },
+                    { step: 2, title: "การเตรียมดิน", desc: "ผสมดินร่วน 2 ส่วน : ทรายหยาบ 1 ส่วน : ขุยมะพร้าว 1 ส่วน : ปุ๋ยคอก 1 ส่วน ใส่ถาดเพาะเว้นขอบ 1 นิ้ว" },
+                    { step: 3, title: "การหยอดเมล็ด", desc: "โรยเมล็ดกระจายทั่ว โรยดินละเอียดกลบทับบางๆ (ลึก 2 เท่าของเมล็ด) และโรยฟาง/แกลบดิบปกคลุม" },
+                    { step: 4, title: "การรดน้ำและการดูแล", desc: "รดน้ำฝอยชุ่มวันละ 2 ครั้ง (เช้า-เย็น) วางไว้ในร่มรำไร เมล็ดจะเริ่มงอกภายใน 5–7 วัน" },
+                    { step: 5, title: "การย้ายปลูก", desc: "เมื่อกล้าอายุ 20–25 วัน (มีใบจริง 3-4 ใบ) ย้ายลงแปลง/กระถางใหญ่ เว้นระยะห่าง 30 ซม." }
+                ]
+            },
+            soil: {
+                title: "การปักชำกิ่งลงดิน (Soil Cutting)",
+                badge: "วิธีที่ 2 • โตไวเป๊ะ",
+                badgeClass: "bg-teal-100 text-teal-800",
+                steps: [
+                    { step: 1, title: "การเลือกและตัดกิ่ง", desc: "เลือกกิ่งกึ่งแก่กึ่งอ่อนจากต้นแม่ที่แข็งแรง ไม่มีช่อดอก ตัดเฉียงที่โคนกิ่ง ความยาว 5-6 นิ้ว" },
+                    { step: 2, title: "การริดใบ", desc: "เด็ดใบส่วนล่างออกเกือบหมด เหลือใบยอดไว้เพียง 2-3 ใบ เพื่อลดการคายน้ำ" },
+                    { step: 3, title: "การจุ่มฮอร์โมน (ออปชัน)", desc: "นำโคนกิ่งจุ่มฮอร์โมนเร่งราก หรือใช้น้ำมะนาว/ผงชูรสเจือจางเพื่อช่วยกระตุ้นราก" },
+                    { step: 4, title: "การปักชำ", desc: "ปักกิ่งลงดินให้ 'ข้อใบคู่ล่างสุด' จมลงใต้ดิน 1-2 นิ้ว (จุดออกรากหลัก) แล้วกดดินรอบโคนให้แน่นพอประมาณ" },
+                    { step: 5, title: "การดูแลรักษา", desc: "รดน้ำชุ่ม วางในที่ร่มรำไร 1 สัปดาห์ ผ่านไป 7-14 วัน กิ่งจะเริ่มแตกรากและผลิยอดใหม่" }
+                ]
+            },
+            water: {
+                title: "การปักชำกิ่งในน้ำ (Water Propagation)",
+                badge: "วิธีที่ 3 • มือใหม่/เศษครัว",
+                badgeClass: "bg-sky-100 text-sky-800",
+                steps: [
+                    { step: 1, title: "การเตรียมกิ่ง", desc: "คัดเลือกก้านโหระพาเหลือใช้ความยาว 5-6 นิ้ว ตัดเฉียงปลายก้านเล็กน้อยเพื่อเพิ่มพื้นที่ดูดน้ำ" },
+                    { step: 2, title: "การริดใบ", desc: "เด็ดใบด้านล่างออกทั้งหมด เหลือไว้เฉพาะใบยอดประมาณ 2-4 ใบ เพื่อป้องกันใบเน่าแช่น้ำ" },
+                    { step: 3, title: "การแช่น้ำ", desc: "ปักกิ่งลงในแก้วใสหรือขวดพลาสติก ใส่น้ำสะอาดให้ท่วมข้อใบล่าง 1-2 นิ้ว" },
+                    { step: 4, title: "การเปลี่ยนน้ำ", desc: "วางแก้วริมหน้าต่างแสงแดดรำไร เปลี่ยนน้ำใหม่ทุกๆ 2-3 วันเพื่อป้องกันน้ำเน่าเสีย" },
+                    { step: 5, title: "การย้ายลงดิน", desc: "เมื่อรากยาว 2-5 ซม. (ประมาณ 5-10 วัน) ให้ย้ายกิ่งปักชำลงปลูกในกระถางดินตามปกติ" }
+                ]
+            }
+        };
+
+        // TRACKING CHECKBOX STATE
+        let checkedStepsState = {
+            seed: [],
+            soil: [],
+            water: []
+        };
+
+        // FILTER METHODS LOGIC
+        function filterMethods(category) {
+            const cards = document.querySelectorAll('.method-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            // Update Active Filter Button UI
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
+                btn.classList.add('text-emerald-100', 'hover:bg-emerald-700/50');
+            });
+
+            const activeBtn = document.getElementById(`btn-filter-${category}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-emerald-100', 'hover:bg-emerald-700/50');
+                activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+            }
+
+            // Show/Hide Cards with smooth animation
+            cards.forEach(card => {
+                if (category === 'all') {
+                    card.classList.remove('hidden');
+                } else {
+                    if (card.dataset.category.includes(category)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        // VIEW SWITCHER LOGIC (GRID vs TABS)
+        function switchView(view) {
+            const gridView = document.getElementById('view-grid');
+            const tabsView = document.getElementById('view-tabs');
+            const btnGrid = document.getElementById('btn-view-grid');
+            const btnTabs = document.getElementById('btn-view-tabs');
+
+            if (view === 'grid') {
+                gridView.classList.remove('hidden');
+                tabsView.classList.add('hidden');
+                
+                btnGrid.classList.add('bg-white', 'text-emerald-700', 'shadow-sm');
+                btnGrid.classList.remove('text-slate-600');
+                btnTabs.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm');
+                btnTabs.classList.add('text-slate-600');
+            } else {
+                gridView.classList.add('hidden');
+                tabsView.classList.remove('hidden');
+
+                btnTabs.classList.add('bg-white', 'text-emerald-700', 'shadow-sm');
+                btnTabs.classList.remove('text-slate-600');
+                btnGrid.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm');
+                btnGrid.classList.add('text-slate-600');
+            }
+        }
+
+        // TAB NAVIGATION IN TAB VIEW
+        function activateTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+
+            contents.forEach(c => c.classList.add('hidden'));
+            buttons.forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            const btnId = 'tab-btn-' + tabId.replace('tab-', '');
+            document.getElementById(btnId).classList.add('active');
+        }
+
+        // STEP MODAL DISPLAY & INTERACTIVE CHECKLIST
+        let currentModalMethod = '';
+
+        function openStepsModal(methodKey) {
+            currentModalMethod = methodKey;
+            const data = stepsData[methodKey];
+            if (!data) return;
+
+            document.getElementById('modal-title').innerText = data.title;
+            const badge = document.getElementById('modal-badge');
+            badge.innerText = data.badge;
+            badge.className = `px-2.5 py-0.5 rounded-full text-xs font-semibold ${data.badgeClass}`;
+
+            const container = document.getElementById('modal-steps-container');
+            container.innerHTML = '';
+
+            data.steps.forEach((item, idx) => {
+                const isChecked = checkedStepsState[methodKey].includes(idx);
+                const stepElem = document.createElement('div');
+                stepElem.className = 'p-3 bg-slate-50 hover:bg-emerald-50/50 rounded-2xl border border-slate-200/80 transition flex items-start gap-3';
+                stepElem.innerHTML = `
+                    <input type="checkbox" id="step-chk-${idx}" class="step-check mt-1 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer" ${isChecked ? 'checked' : ''} onchange="toggleStepCheck('${methodKey}', ${idx})">
+                    <label for="step-chk-${idx}" class="cursor-pointer text-xs select-none">
+                        <strong class="text-slate-800 block text-sm mb-0.5">ขั้นตอนที่ ${item.step}: ${item.title}</strong>
+                        <span class="text-slate-600 leading-relaxed">${item.desc}</span>
+                    </label>
+                `;
+                container.appendChild(stepElem);
+            });
+
+            updateProgressText(methodKey);
+
+            // Show Modal with Animation
+            const modal = document.getElementById('steps-modal');
+            const modalContent = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeStepsModal() {
+            const modal = document.getElementById('steps-modal');
+            const modalContent = document.getElementById('modal-content');
+            
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function toggleStepCheck(methodKey, stepIdx) {
+            const list = checkedStepsState[methodKey];
+            const foundIdx = list.indexOf(stepIdx);
+            if (foundIdx > -1) {
+                list.splice(foundIdx, 1);
+            } else {
+                list.push(stepIdx);
+            }
+            updateProgressText(methodKey);
+        }
+
+        function updateProgressText(methodKey) {
+            const total = stepsData[methodKey].steps.length;
+            const completed = checkedStepsState[methodKey].length;
+            document.getElementById('modal-progress-text').innerText = `ความคืบหน้าทำแล้ว: ${completed}/${total} ขั้นตอน`;
+        }
+
+        // Close modal when clicking outside box
+        window.onclick = function(event) {
+            const modal = document.getElementById('steps-modal');
+            if (event.target === modal) {
+                closeStepsModal();
+            }
+        }
+    </script>
+</body>
+</html>
